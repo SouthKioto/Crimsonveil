@@ -32,5 +32,5 @@ npm run dev
 
 ## Css icons liblaries
 - <b>Tailwindcss</b>
-    - [Tailwondcss Docs](https://tailwindcss.com/docs/installation/using-vite)
+    - [Tailwindcss Docs](https://tailwindcss.com/docs/installation/using-vite)
 
