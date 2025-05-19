@@ -37,17 +37,4 @@ npm run dev
 - <b>Bootstrap-icons</b>
     - [Bootstrap-icons](https://icons.getbootstrap.com/)
 
-## Gallery
-
-- Main
-![mainpage](https://github.com/SouthKioto/flappy-bird-react-phaser/blob/master/src/gallery/main.png) 
-
-- LeaderBoard
-![leaderBoard](https://github.com/SouthKioto/flappy-bird-react-phaser/blob/master/src/gallery/leaderboard.png)
-
-- Settings
-![settings](https://github.com/SouthKioto/flappy-bird-react-phaser/blob/master/src/gallery/settings.png)
-
-- Game
- ![game](https://github.com/SouthKioto/flappy-bird-react-phaser/blob/master/src/gallery/game.png)
 
