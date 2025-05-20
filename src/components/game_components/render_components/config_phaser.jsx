@@ -1,14 +1,22 @@
 // tutaj beda importowane sceny z folderu scenes
-
+import { getWidth, getHeight } from "./utils/max_width_and_height.tsx";
 import { Game } from './scenes/Game';
-import Phaser from "phaser";
+import Phaser, { Physics } from "phaser";
+
+console.log(getWidth() + " | " + getHeight())
 
 export const config_phaser = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 900,
+  width: getWidth(),
+  height: getHeight(),
   parent: "game-container",
-  backgroundColor: "#028af8",
+  backgroundColor: "#000000",
   scene: Game,
+  physics: {
+    default: "arcade",
+    arcade: {
+      debug: true, //TODO chande at the end
+    }
+  }
 };
 
