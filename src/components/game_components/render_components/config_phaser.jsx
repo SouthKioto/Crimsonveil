@@ -15,6 +15,7 @@ export const config_phaser = {
   physics: {
     default: "arcade",
     arcade: {
+
       debug: true, //TODO chande at the end
     }
   }

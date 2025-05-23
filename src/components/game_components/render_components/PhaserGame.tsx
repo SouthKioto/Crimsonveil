@@ -8,6 +8,7 @@ export const PhaserGame = ({ config }) => {
     const game = new Phaser.Game(config)
 
 
+
     return () => {
       game.destroy(true)
     }
@@ -17,5 +18,4 @@ export const PhaserGame = ({ config }) => {
   return (
     <div id="game-container"></div>
   )
-
 }

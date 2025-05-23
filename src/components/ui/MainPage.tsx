@@ -5,6 +5,11 @@ export const MainPage = () => {
 
   const [counter, setCounter] = useState(0)
 
+  const costam = () => {
+
+
+  }
+
   const addOne = () => {
     setCounter(counter + 1)
   }
@@ -12,7 +17,8 @@ export const MainPage = () => {
   return (
     <>
       <h1>Main page</h1>
-      <button className="bg-red-500" onClick={addOne}>counter: {counter}</button>
+      <button className="bg-red-500 rounded-2xl p-2" onClick={addOne}>counter: {counter}</button>
+
     </>
 
   )
