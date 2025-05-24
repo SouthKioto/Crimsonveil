@@ -2,12 +2,18 @@ import { EventBus } from "../EventBus";
 import { generate_trees } from "../game_elements/generate_trees.tsx";
 import { generate_map } from "../game_elements/generate_map.tsx";
 import { Scene } from "phaser";
-import { Player } from "../game_elements/Player";
+import { Player } from "../Objects/Player";
 import { Tree } from "../Objects/Tree.tsx";
+import { Frog } from "../Objects/Frog.tsx";
+import { generate_frogs } from "../game_elements/generate_frogs.tsx";
+import { CreateFrogAnims } from "../anims/CreateFrogAnims.tsx";
+import { CreatePlayerAnims } from "../anims/CreatePlayerAnims.tsx";
 
 var player: Player;
-var tree;
+var tree: Tree;
 var treeGroup;
+var frog: Frog;
+
 
 // creacte WSAD keys
 let KeyA: Phaser.Input.Keyboard.Key;
@@ -38,6 +44,12 @@ export class Game extends Scene {
       frameWidth: 64,
       frameHeight: 112,
     });
+
+    this.load.spritesheet('frog', "/assets/game_assets/ToxicFrogBlueBlue_Hop.png", {
+      frameWidth: 48,
+      frameHeight: 48,
+    });
+
   }
 
   create() {
@@ -48,15 +60,18 @@ export class Game extends Scene {
     KeyS = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.S);
     KeySpaceAttack = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
+    //anims
+    CreateFrogAnims(this.anims)
+    CreatePlayerAnims(this.anims)
+
     //generate map
     const array: number[][] = generate_map(100, 100);
     const map = this.make.tilemap({ data: array, tileWidth: 32, tileHeight: 32 })
     const tiles = map.addTilesetImage(null, "tiles");
     const layer = map.createLayer(0, tiles, 0, 0)
 
-
     //generate trees
-    generate_trees(300, this)
+    generate_trees(5000, this)
 
     //adding player
     const playerSprite = new Player(this, 400, 400);
@@ -64,36 +79,25 @@ export class Game extends Scene {
     this.add.existing(player);
     player.setScale(2)
 
-    this.physics.add.collider(player, treeGroup)
 
-    //keys = this.input.keyboard?.createCursorKeys();
+    //add frog enemies
+    /*let frogSprite = new Frog(this, 500, 400, "frog");
+    frog = this.physics.add.existing(frogSprite) as Frog;
+    this.add.existing(frog)*/
 
-    this.anims.create({
-      key: "idle",
-      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 5 }),
-      frameRate: 10,
-      repeat: -1,
-    })
+    generate_frogs(this, 20, 'frog')
 
-    this.anims.create({
-      key: "walking",
-      frames: this.anims.generateFrameNumbers('player', { start: 9, end: 16 }),
-      frameRate: 10,
-      repeat: -1
-    })
+    //this.physics.add.collider(player, treeGroup)
 
-    this.anims.create({
-      key: 'attack',
-      frames: this.anims.generateFrameNumbers('player', { start: 18, end: 23 }),
-      frameRate: 10,
-      repeat: 1
-    })
+    //keys = this.input.keyboard?.createCursorKeys(); 
+
 
     //EventBus.emit('current-scene-ready', this); //potrzebne do laczenia phasera i react ui
   }
 
   update() {
     if (!player || !player.body) return;
+
 
     var isMoving = false;
     var isAttacking = false;
