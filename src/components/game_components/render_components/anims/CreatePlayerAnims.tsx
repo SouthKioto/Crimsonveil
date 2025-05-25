@@ -19,7 +19,21 @@ export const CreatePlayerAnims = (anim: Phaser.Animations.AnimationManager) => {
     key: 'attack',
     frames: anim.generateFrameNumbers('player', { start: 18, end: 23 }),
     frameRate: 10,
-    repeat: 1
+    repeat: -1
+  })
+
+  anim.create({
+    key: 'strong_attack',
+    frames: anim.generateFrameNumbers('player', { start: 27, end: 32 }),
+    frameRate: 10,
+    repeat: -1
+  })
+
+  anim.create({
+    key: 'bow_attack',
+    frames: anim.generateFrameNumbers('player', { start: 36, end: 44 }),
+    frameRate: 10,
+    repeat: -1
   })
 
 

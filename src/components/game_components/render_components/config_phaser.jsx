@@ -15,7 +15,7 @@ export const config_phaser = {
   physics: {
     default: "arcade",
     arcade: {
-
+      gravity: { y: 0 },
       debug: true, //TODO chande at the end
     }
   }

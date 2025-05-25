@@ -6,7 +6,7 @@ export const generate_frogs = (scene: Phaser.Scene, frogsCount: number, texture:
 
   let frog: Frog;
 
-  for (let i = 0; i <= frogsCount; i++) {
+  for (let i = 1; i <= frogsCount; i++) {
     let randomX = Math.random() * getWidth();
     let randomY = Math.random() * getHeight();
 
@@ -14,6 +14,9 @@ export const generate_frogs = (scene: Phaser.Scene, frogsCount: number, texture:
     frog = new Frog(scene, randomX, randomY, texture);
     scene.physics.add.existing(frog);
     scene.add.existing(frog);
+
+    frog.setSize(25, 20)
+
 
   }
 }

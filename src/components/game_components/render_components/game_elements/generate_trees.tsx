@@ -32,10 +32,12 @@ export const generate_trees = (countStructures: number, scene) => {
     if (overlaps) continue;
 
     tree = new Tree(scene, randomX, randomY, randomTreeStage);
-    tree.setScale(2)
     scene.physics.add.existing(tree)
     scene.add.existing(tree);
 
+    tree.setScale(2)
+    tree.setSize(10, -50);
+    tree.setOffset(27, 95)
     placedTrees.push({ x: randomX, y: randomY });
 
   }

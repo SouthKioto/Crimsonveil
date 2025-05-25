@@ -11,9 +11,7 @@ import { CreatePlayerAnims } from "../anims/CreatePlayerAnims.tsx";
 
 var player: Player;
 var tree: Tree;
-var treeGroup;
 var frog: Frog;
-
 
 // creacte WSAD keys
 let KeyA: Phaser.Input.Keyboard.Key;
@@ -21,12 +19,13 @@ let KeyD: Phaser.Input.Keyboard.Key;
 let KeyW: Phaser.Input.Keyboard.Key;
 let KeyS: Phaser.Input.Keyboard.Key;
 let KeySpaceAttack: Phaser.Input.Keyboard.Key;
+let KeyRStrongAttack: Phaser.Input.Keyboard.Key;
+let KeyFBowAttack: Phaser.Input.Keyboard.Key;
 
 //movement
 const movement_speed = 200;
 
 export class Game extends Scene {
-
   constructor() {
     super('Game')
   }
@@ -71,21 +70,24 @@ export class Game extends Scene {
     const layer = map.createLayer(0, tiles, 0, 0)
 
     //generate trees
-    generate_trees(5000, this)
+    //generate_trees(50, this)
+
+    //add frog enemies
+    //generate_frogs(this, 1, 'frog')
 
     //adding player
     const playerSprite = new Player(this, 400, 400);
     player = this.physics.add.existing(playerSprite) as Player;
     this.add.existing(player);
-    player.setScale(2)
+    player.setSize(8, 15);
+    player.setScale(10)
 
+    console.log(player.health)
 
-    //add frog enemies
     /*let frogSprite = new Frog(this, 500, 400, "frog");
     frog = this.physics.add.existing(frogSprite) as Frog;
     this.add.existing(frog)*/
 
-    generate_frogs(this, 20, 'frog')
 
     //this.physics.add.collider(player, treeGroup)
 
@@ -106,19 +108,38 @@ export class Game extends Scene {
 
     if (KeyA.isDown) {
       player.setVelocityX((-1) * (movement_speed))
+      isMoving = true;
+
     } else if (KeyD.isDown) {
       player.setVelocityX(movement_speed)
+      isMoving = true;
 
     } else if (KeyW.isDown) {
       player.setVelocityY((-1) * (movement_speed))
+      isMoving = true;
 
     } else if (KeyS.isDown) {
       player.setVelocityY(movement_speed)
+      isMoving = true;
     }
 
-    if (!isMoving && isAttacking) {
+
+    if (KeySpaceAttack.isDown) {
+      //player.play("attack")
+      isAttacking = true;
+      isMoving = false;
+      player.setVelocity(0);
+      //console.log('attack')
+    }
+
+
+    if (isMoving) {
       if (player.anims.currentAnim?.key !== 'walking') {
         player.play('walking');
+      }
+    } else if (isAttacking) {
+      if (player.anims.currentAnim?.key !== 'attack') {
+        player.play('attack');
       }
     } else {
       if (player.anims.currentAnim?.key !== 'idle') {
@@ -126,8 +147,5 @@ export class Game extends Scene {
       }
     }
 
-    if (KeySpaceAttack.isDown) {
-      player.play("attack")
-    }
   }
 }

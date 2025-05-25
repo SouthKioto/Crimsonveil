@@ -35,7 +35,6 @@ export class Frog extends Phaser.Physics.Arcade.Sprite {
     })
   }
 
-
   preUpdate(t: number, dt: number) {
     super.preUpdate(t, dt);
 
