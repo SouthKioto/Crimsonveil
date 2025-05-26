@@ -35,8 +35,6 @@ export const CreatePlayerAnims = (anim: Phaser.Animations.AnimationManager) => {
     frameRate: 10,
     repeat: -1
   })
-
-
 }
 
 

@@ -36,7 +36,7 @@ export const generate_trees = (countStructures: number, scene) => {
     scene.add.existing(tree);
 
     tree.setScale(2)
-    tree.setSize(10, -50);
+    tree.setSize(10, -25);
     tree.setOffset(27, 95)
     placedTrees.push({ x: randomX, y: randomY });
 

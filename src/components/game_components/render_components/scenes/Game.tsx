@@ -25,6 +25,9 @@ let KeyFBowAttack: Phaser.Input.Keyboard.Key;
 //movement
 const movement_speed = 200;
 
+//flip
+var isFlipped: boolean;
+
 export class Game extends Scene {
   constructor() {
     super('Game')
@@ -44,7 +47,7 @@ export class Game extends Scene {
       frameHeight: 112,
     });
 
-    this.load.spritesheet('frog', "/assets/game_assets/ToxicFrogBlueBlue_Hop.png", {
+    this.load.spritesheet('frog', "/assets/game_assets/ToxicFrogBlueBlue_Sheet.png", {
       frameWidth: 48,
       frameHeight: 48,
     });
@@ -58,6 +61,9 @@ export class Game extends Scene {
     KeyW = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     KeyS = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.S);
     KeySpaceAttack = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+    KeyRStrongAttack = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.R)
+    KeyFBowAttack = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+
 
     //anims
     CreateFrogAnims(this.anims)
@@ -70,17 +76,17 @@ export class Game extends Scene {
     const layer = map.createLayer(0, tiles, 0, 0)
 
     //generate trees
-    //generate_trees(50, this)
+    generate_trees(50, this)
 
     //add frog enemies
-    //generate_frogs(this, 1, 'frog')
+    generate_frogs(this, 50, 'frog')
 
     //adding player
     const playerSprite = new Player(this, 400, 400);
     player = this.physics.add.existing(playerSprite) as Player;
     this.add.existing(player);
     player.setSize(8, 15);
-    player.setScale(10)
+    player.setScale(2)
 
     console.log(player.health)
 
@@ -100,20 +106,22 @@ export class Game extends Scene {
   update() {
     if (!player || !player.body) return;
 
-
     var isMoving = false;
     var isAttacking = false;
+    var isNormalAttack = false;
+    var isStrongAttack = false;
+    var isBowAttack = false;
 
     player.setVelocity(0)
 
     if (KeyA.isDown) {
       player.setVelocityX((-1) * (movement_speed))
       isMoving = true;
-
+      isFlipped = true;
     } else if (KeyD.isDown) {
       player.setVelocityX(movement_speed)
       isMoving = true;
-
+      isFlipped = false;
     } else if (KeyW.isDown) {
       player.setVelocityY((-1) * (movement_speed))
       isMoving = true;
@@ -123,23 +131,48 @@ export class Game extends Scene {
       isMoving = true;
     }
 
-
     if (KeySpaceAttack.isDown) {
       //player.play("attack")
       isAttacking = true;
+      isNormalAttack = true;
       isMoving = false;
       player.setVelocity(0);
       //console.log('attack')
     }
 
+    if (KeyRStrongAttack.isDown) {
+      isAttacking = true;
+      isStrongAttack = true;
+      isMoving = false;
+      player.setVelocity(0);
+    }
+
+    if (KeyFBowAttack.isDown) {
+      isAttacking = true;
+      isBowAttack = true;
+      isMoving = false;
+      player.setVelocity(0);
+    }
+
+    player.setFlipX(isFlipped);
 
     if (isMoving) {
       if (player.anims.currentAnim?.key !== 'walking') {
         player.play('walking');
       }
     } else if (isAttacking) {
-      if (player.anims.currentAnim?.key !== 'attack') {
-        player.play('attack');
+      if (isNormalAttack) {
+        if (player.anims.currentAnim?.key !== 'attack') {
+          player.play('attack');
+        }
+      } else if (isStrongAttack) {
+        if (player.anims.currentAnim?.key !== 'strong_attack') {
+          player.play('strong_attack')
+        }
+      } else if (isBowAttack) {
+        if (player.anims.currentAnim?.key !== 'bow_attack') {
+          player.play('bow_attack')
+        }
       }
     } else {
       if (player.anims.currentAnim?.key !== 'idle') {
