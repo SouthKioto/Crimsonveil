@@ -30,9 +30,10 @@ export class Frog extends Phaser.Physics.Arcade.Sprite {
   public direction = Directions.RIGHT;
   private chooseStayMoveEvent: Phaser.Time.TimerEvent;
   private moveEvent?: Phaser.Time.TimerEvent;
-  private isMoving = false;
   private isFlipped: boolean;
+  private isMoving = false;
 
+  private damage: number;
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
     super(scene, x, y, texture);
@@ -50,7 +51,7 @@ export class Frog extends Phaser.Physics.Arcade.Sprite {
       delay: 4000,
       callback: () => {
         this.isMoving = frogMoveOrNot();
-        console.log("Czy żaba się rusza?", this.isMoving);
+        //console.log("Czy żaba się rusza?", this.isMoving);
 
         if (this.isMoving) {
           this.frog_move(scene);

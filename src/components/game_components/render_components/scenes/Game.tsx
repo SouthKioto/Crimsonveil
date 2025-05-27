@@ -8,19 +8,23 @@ import { Frog } from "../Objects/Frog.tsx";
 import { generate_frogs } from "../game_elements/generate_frogs.tsx";
 import { CreateFrogAnims } from "../anims/CreateFrogAnims.tsx";
 import { CreatePlayerAnims } from "../anims/CreatePlayerAnims.tsx";
+import { add_player } from "../game_elements/add_player.tsx";
+import { KeymapsManager } from "../game_elements/KeymapsManager.tsx";
+import { player_control } from "../game_elements/player_control.tsx";
+
+
+import keymaps_json from "../../../../components/settings/keymaps.json";
+
+//keymaps
+
 
 var player: Player;
 var tree: Tree;
 var frog: Frog;
 
+//hitboxes
+
 // creacte WSAD keys
-let KeyA: Phaser.Input.Keyboard.Key;
-let KeyD: Phaser.Input.Keyboard.Key;
-let KeyW: Phaser.Input.Keyboard.Key;
-let KeyS: Phaser.Input.Keyboard.Key;
-let KeySpaceAttack: Phaser.Input.Keyboard.Key;
-let KeyRStrongAttack: Phaser.Input.Keyboard.Key;
-let KeyFBowAttack: Phaser.Input.Keyboard.Key;
 
 //movement
 const movement_speed = 200;
@@ -28,7 +32,19 @@ const movement_speed = 200;
 //flip
 var isFlipped: boolean;
 
+//keymaps
+//const keymaps_obj;
+
+/*useEffect(() => {
+  fetch("../../../../components/settings/keymaps.json")
+    .then((res) => res.json)
+    .then((data) => )
+})*/
+
+
 export class Game extends Scene {
+  private keymapsManager: KeymapsManager;
+
   constructor() {
     super('Game')
   }
@@ -51,19 +67,10 @@ export class Game extends Scene {
       frameWidth: 48,
       frameHeight: 48,
     });
-
   }
 
   create() {
     //keyMaps
-    KeyA = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-    KeyD = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-    KeyW = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-    KeyS = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-    KeySpaceAttack = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
-    KeyRStrongAttack = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.R)
-    KeyFBowAttack = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.F);
-
 
     //anims
     CreateFrogAnims(this.anims)
@@ -79,26 +86,19 @@ export class Game extends Scene {
     generate_trees(50, this)
 
     //add frog enemies
-    generate_frogs(this, 50, 'frog')
+    generate_frogs(this, 5, 'frog')
 
     //adding player
-    const playerSprite = new Player(this, 400, 400);
-    player = this.physics.add.existing(playerSprite) as Player;
-    this.add.existing(player);
-    player.setSize(8, 15);
-    player.setScale(2)
+    player = add_player(this, 'player')
 
     console.log(player.health)
 
-    /*let frogSprite = new Frog(this, 500, 400, "frog");
-    frog = this.physics.add.existing(frogSprite) as Frog;
-    this.add.existing(frog)*/
+    this.keymapsManager = new KeymapsManager(keymaps_json);
+    this.keymapsManager.registerKeys(this.input.keyboard)
 
+    console.log(this.keymapsManager.getKey("Attack"))
 
     //this.physics.add.collider(player, treeGroup)
-
-    //keys = this.input.keyboard?.createCursorKeys(); 
-
 
     //EventBus.emit('current-scene-ready', this); //potrzebne do laczenia phasera i react ui
   }
@@ -114,71 +114,81 @@ export class Game extends Scene {
 
     player.setVelocity(0)
 
-    if (KeyA.isDown) {
+    if (this.keymapsManager.getKey("Left")?.isDown) {
       player.setVelocityX((-1) * (movement_speed))
       isMoving = true;
       isFlipped = true;
-    } else if (KeyD.isDown) {
+
+    } else if (this.keymapsManager.getKey("Right")?.isDown) {
       player.setVelocityX(movement_speed)
       isMoving = true;
       isFlipped = false;
-    } else if (KeyW.isDown) {
+
+    } else if (this.keymapsManager.getKey("Up")?.isDown) {
       player.setVelocityY((-1) * (movement_speed))
       isMoving = true;
 
-    } else if (KeyS.isDown) {
+    } else if (this.keymapsManager.getKey("Down")?.isDown) {
       player.setVelocityY(movement_speed)
       isMoving = true;
     }
 
-    if (KeySpaceAttack.isDown) {
-      //player.play("attack")
+    if (this.keymapsManager.getKey("Attack")?.isDown) {
       isAttacking = true;
       isNormalAttack = true;
       isMoving = false;
       player.setVelocity(0);
-      //console.log('attack')
+
+      //console.log("Attack");
+
     }
 
-    if (KeyRStrongAttack.isDown) {
+    if (this.keymapsManager.getKey("Strong_Attack")?.isDown) {
       isAttacking = true;
       isStrongAttack = true;
       isMoving = false;
       player.setVelocity(0);
+
+      //console.log("Strong Attack");
     }
 
-    if (KeyFBowAttack.isDown) {
+    if (this.keymapsManager.getKey("Bow_Attack")?.isDown) {
       isAttacking = true;
       isBowAttack = true;
       isMoving = false;
       player.setVelocity(0);
+
+
+      //console.log("BowAttack");
     }
 
     player.setFlipX(isFlipped);
 
-    if (isMoving) {
-      if (player.anims.currentAnim?.key !== 'walking') {
-        player.play('walking');
-      }
-    } else if (isAttacking) {
+    if (isAttacking) {
       if (isNormalAttack) {
         if (player.anims.currentAnim?.key !== 'attack') {
+          console.log("Playing attack");
           player.play('attack');
         }
       } else if (isStrongAttack) {
         if (player.anims.currentAnim?.key !== 'strong_attack') {
-          player.play('strong_attack')
+          console.log("Playing strong_attack");
+          player.play('strong_attack');
         }
       } else if (isBowAttack) {
         if (player.anims.currentAnim?.key !== 'bow_attack') {
-          player.play('bow_attack')
+          console.log("Playing bow_attack");
+          player.play('bow_attack');
         }
+      }
+    } else if (isMoving) {
+      if (player.anims.currentAnim?.key !== 'walking') {
+        player.play('walking');
       }
     } else {
       if (player.anims.currentAnim?.key !== 'idle') {
         player.play("idle");
       }
     }
-
   }
 }

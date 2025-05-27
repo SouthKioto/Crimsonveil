@@ -16,7 +16,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     return this._health;
   }
 
-  constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, "player");
+  constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
+    super(scene, x, y, texture);
   }
 }
