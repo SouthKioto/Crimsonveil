@@ -14,6 +14,8 @@ import { player_control } from "../game_elements/player_control.tsx";
 
 
 import keymaps_json from "../../../../components/settings/keymaps.json";
+import { Weapon } from "../Objects/Weapons/Weapon.tsx";
+import { Sword } from "../Objects/Weapons/Sword.tsx";
 
 //keymaps
 
@@ -91,12 +93,15 @@ export class Game extends Scene {
     //adding player
     player = add_player(this, 'player')
 
-    console.log(player.health)
+    //console.log(player.health)
 
     this.keymapsManager = new KeymapsManager(keymaps_json);
     this.keymapsManager.registerKeys(this.input.keyboard)
 
-    console.log(this.keymapsManager.getKey("Attack"))
+
+    const sword = new Sword(this, 500, 500, "Sword");
+    sword.getWeaponInfo()
+
 
     //this.physics.add.collider(player, treeGroup)
 
