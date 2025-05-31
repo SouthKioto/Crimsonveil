@@ -1,5 +1,5 @@
 import { getHeight, getWidth } from "../utils/max_width_and_height"
-import { Frog } from "../Objects/Frog";
+import { Frog } from "../Objects/Enemies/Frog.tsx";
 
 
 export const generate_frogs = (scene: Phaser.Scene, frogsCount: number, texture: string) => {

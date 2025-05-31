@@ -1,4 +1,4 @@
-import Phaser, { Scene } from "phaser";
+import Phaser from "phaser";
 
 enum Moving {
   MOVE,
@@ -26,14 +26,15 @@ const frogMoveOrNot = () => {
   return Phaser.Math.Between(0, 1) === 1;
 }
 
-export class Frog extends Phaser.Physics.Arcade.Sprite {
-  public direction = Directions.RIGHT;
-  private chooseStayMoveEvent: Phaser.Time.TimerEvent;
-  private moveEvent?: Phaser.Time.TimerEvent;
-  private isFlipped: boolean;
-  private isMoving = false;
+export class Enemy extends Phaser.Physics.Arcade.Sprite {
+  protected direction = Directions.RIGHT;
+  protected chooseStayMoveEvent: Phaser.Time.TimerEvent;
+  protected moveEvent?: Phaser.Time.TimerEvent;
+  protected isFlipped: boolean;
+  protected isMoving = false;
 
-  private damage: number;
+  protected _damage: number;
+  protected _health: number;
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
     super(scene, x, y, texture);
@@ -90,6 +91,7 @@ export class Frog extends Phaser.Physics.Arcade.Sprite {
     });
   }
 
+
   preUpdate(t: number, dt: number) {
     super.preUpdate(t, dt);
 
@@ -115,4 +117,6 @@ export class Frog extends Phaser.Physics.Arcade.Sprite {
         break;
     }
   }
+
 }
+

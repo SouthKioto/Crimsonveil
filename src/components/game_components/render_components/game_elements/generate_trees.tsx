@@ -1,5 +1,5 @@
 import { getWidth, getHeight } from "../utils/max_width_and_height"
-import { Tree } from "../Objects/Tree"
+import { Tree } from "../Objects/Environment/Tree"
 
 
 export const generate_trees = (countStructures: number, scene) => {
@@ -36,7 +36,7 @@ export const generate_trees = (countStructures: number, scene) => {
     scene.add.existing(tree);
 
     tree.setScale(2)
-    tree.setSize(10, -25);
+    tree.setSize(10, -20);
     tree.setOffset(27, 95)
     placedTrees.push({ x: randomX, y: randomY });
 
