@@ -22,9 +22,15 @@ const randomDirection = (dir: Direstions) => {
   return newDirection;
 }
 
-const frogMoveOrNot = () => {
+const enemyMoveOrNot = () => {
   return Phaser.Math.Between(0, 1) === 1;
 }
+
+/*
+ * Enemy class
+ * Representing an enemy in the game.
+ * @class
+ */
 
 export class Enemy extends Phaser.Physics.Arcade.Sprite {
   protected direction = Directions.RIGHT;
@@ -33,49 +39,81 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
   protected isFlipped: boolean;
   protected isMoving = false;
 
+  protected moveAnims: string;
+  protected stayAnims: string;
+  protected attackAnims: string;
+
   protected _damage: number;
   protected _health: number;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
+  /**
+  * Creates a enemy instance
+  *
+  * @param {Phaser.Scene} scene - Phaser current scene
+  * @param {number} x - position x 
+  * @param {number} y - position y  
+  * @param {string} texture - Texture of generated enemy 
+  * @param {string} enemyMoveAnims - loaded enemy move anims
+  * @param {string} enemyStayAnims - loaded enemy stay anims
+  * @param {string} enemyAttackAnims - loaded enemy attack anims
+  */
+
+  constructor(scene: Phaser.Scene, x: number, y: number, texture: string, enemyMoveAnims: string, enemyStayAnims: string, enemyAttackAnims: string) {
     super(scene, x, y, texture);
+
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
-    this.isMoving = frogMoveOrNot();
+    this.moveAnims = enemyMoveAnims;
+    this.stayAnims = enemyStayAnims;
+    this.attackAnims = enemyAttackAnims;
+
+    this.isMoving = enemyMoveOrNot();
     if (this.isMoving) {
-      this.frog_move(scene);
+      this.enemy_move(scene, this.moveAnims);
     } else {
-      this.frog_stay();
+      this.enemy_stay(this.stayAnims);
     }
 
     this.chooseStayMoveEvent = scene.time.addEvent({
       delay: 4000,
       callback: () => {
-        this.isMoving = frogMoveOrNot();
-        //console.log("Czy żaba się rusza?", this.isMoving);
+        this.isMoving = enemyMoveOrNot();
+        //console.log("Czy zaba się rusza?", this.isMoving);
 
         if (this.isMoving) {
-          this.frog_move(scene);
+          this.enemy_move(scene, this.moveAnims);
         } else {
-          this.frog_stay();
+          this.enemy_stay(this.stayAnims);
         }
       },
       loop: true,
     });
   }
 
-  private frog_stay() {
+  /**
+  * enemy_stay
+  * @param {string} anims - Loaded stay anims 
+  */
+
+  private enemy_stay(anims: string) {
     if (this.moveEvent) {
       this.moveEvent.remove();
       this.moveEvent = undefined;
     }
 
     this.setVelocity(0, 0);
-    this.anims.play("frog_stay", true);
+    this.anims.play(anims, true);
   }
 
-  private frog_move(scene: Phaser.Scene) {
-    this.anims.play("frog_hop", true);
+  /**
+   * enemy_move
+   * @param {Phaser.Scene} scene - Current moving scene
+   * @param {string} anims - Loaded move anims 
+   */
+
+  private enemy_move(scene: Phaser.Scene, anims: string) {
+    this.anims.play(anims, true);
 
     if (this.moveEvent) {
       this.moveEvent.remove();
@@ -85,12 +123,10 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
       delay: 1000,
       callback: () => {
         this.direction = randomDirection(this.direction);
-
       },
       loop: true,
     });
   }
-
 
   preUpdate(t: number, dt: number) {
     super.preUpdate(t, dt);
@@ -111,9 +147,12 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
         break;
       case Directions.LEFT:
         this.setVelocity(-speed, 0);
+        this.setFlipX(true);
+
         break;
       case Directions.RIGHT:
         this.setVelocity(speed, 0);
+        this.setFlipX(false);
         break;
     }
   }
