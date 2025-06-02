@@ -1,0 +1,13 @@
+{
+  "Up": "W",
+  "Down": "S",
+  "Left": "A",
+  "Right": "D",
+  
+  "Attack": "H",
+  "Strong_Attack": "J",
+  "Bow_Attack": "K",
+
+  "Equipment": "I"
+  
+}

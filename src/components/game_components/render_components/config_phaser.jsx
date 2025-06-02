@@ -1,27 +1,23 @@
 // tutaj beda importowane sceny z folderu scenes
-import { Boot } from './scenes/Boot';
+import { getWidth, getHeight } from "./utils/max_width_and_height.tsx";
 import { Game } from './scenes/Game';
-import { GameOver } from './scenes/GameOver';
-import { MainMenu } from './scenes/MainMenu';
-import { Preloader } from './scenes/Preloader';
-import Phaser from "phaser";
+import Phaser, { Physics } from "phaser";
 
-const config = {
+console.log(getWidth() + " | " + getHeight())
+
+export const config_phaser = {
   type: Phaser.AUTO,
-  width: 1024,
-  height: 768,
+  width: getWidth(),
+  height: getHeight(),
   parent: "game-container",
-  backgroundColor: "#028af8",
-  scene: [
-    Boot,
-    Preloader,
-    MainMenu,
-    Game,
-    GameOver
-  ]
-
+  backgroundColor: "#000000",
+  scene: Game,
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 0 },
+      debug: true, //TODO chande at the end
+    }
+  }
 };
 
-export const StartGame = (parent) => {
-  return new Phaser.Game({ ...config, parent });
-} 
