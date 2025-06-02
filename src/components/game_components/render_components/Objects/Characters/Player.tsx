@@ -2,6 +2,8 @@ import Phaser from "phaser";
 import { KeymapsManager } from "../../game_elements/KeymapsManager";
 import keymaps_json from "../../../../../components/settings/keymaps.json";
 import { Character } from "./Character";
+import { Equipment } from "../Ui/Equipment";
+import type { Weapon } from "../Weapons/Weapon";
 
 enum HealthState {
   IDLE,
@@ -12,6 +14,8 @@ enum HealthState {
 export class Player extends Character {
   private keymapsManager: KeymapsManager;
   private isFlipped: boolean;
+  private inventoryIsOpen: boolean = false;
+  protected equipment: Equipment;
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
     super(scene, x, y, texture);
@@ -24,6 +28,10 @@ export class Player extends Character {
 
     this._health = 110;
     this._movementSpeed = 200;
+
+    this.equipment = new Equipment(scene, 10, 10, 10, 'inventory_slot')
+    this.setEquipment(this.equipment);
+    this.equipment.createEquipment();
   }
 
   get health() {
@@ -37,6 +45,18 @@ export class Player extends Character {
   updateHealth = (value: number) => {
     if (value && this._health !== 0) {
       this._health += value;
+    }
+  }
+
+  setEquipment(equipment: Equipment) {
+    this.equipment = equipment;
+  }
+
+  addToInventory(item: Weapon) {
+    if (this.equipment) {
+      this.equipment.addItemToInventory(item);
+    } else {
+      console.warn("EQ nie jest utworzone")
     }
   }
 
@@ -93,6 +113,15 @@ export class Player extends Character {
       isBowAttack = true;
       isMoving = false;
       this.setVelocity(0);
+    }
+
+    //inventory
+
+    if (Phaser.Input.Keyboard.JustDown(this.keymapsManager.getKey("Equipment"))) {
+      this.inventoryIsOpen = !this.inventoryIsOpen;
+      this.equipment.toggleInventory(this.inventoryIsOpen);
+
+      console.log("Input player Działą")
     }
 
     this.setFlipX(this.isFlipped);
