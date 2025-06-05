@@ -8,7 +8,7 @@ import type { Weapon } from "../Weapons/Weapon";
 enum HealthState {
   IDLE,
   DAMAGE,
-  DEAD
+  DEAD,
 }
 
 export class Player extends Character {
@@ -29,7 +29,7 @@ export class Player extends Character {
     this._health = 110;
     this._movementSpeed = 200;
 
-    this.equipment = new Equipment(scene, 10, 10, 10, 'inventory_slot')
+    this.equipment = new Equipment(scene, 10, 10, 10, "inventory_slot");
     this.setEquipment(this.equipment);
     this.equipment.createEquipment();
   }
@@ -46,7 +46,7 @@ export class Player extends Character {
     if (value && this._health !== 0) {
       this._health += value;
     }
-  }
+  };
 
   setEquipment(equipment: Equipment) {
     this.equipment = equipment;
@@ -56,8 +56,12 @@ export class Player extends Character {
     if (this.equipment) {
       this.equipment.addItemToInventory(item);
     } else {
-      console.warn("EQ nie jest utworzone")
+      console.warn("EQ nie jest utworzone");
     }
+  }
+
+  showEquipment() {
+    console.log(this.equipment);
   }
 
   update() {
@@ -76,21 +80,17 @@ export class Player extends Character {
       this.setVelocityX(-this._movementSpeed);
       isMoving = true;
       this.isFlipped = true;
-
     } else if (this.keymapsManager.getKey("Right")?.isDown) {
       this.setVelocityX(this._movementSpeed);
 
       isMoving = true;
       this.isFlipped = false;
-
     } else if (this.keymapsManager.getKey("Up")?.isDown) {
       this.setVelocityY(-this._movementSpeed);
       isMoving = true;
-
     } else if (this.keymapsManager.getKey("Down")?.isDown) {
       this.setVelocityY(this._movementSpeed);
       isMoving = true;
-
     }
 
     // Attacks
@@ -117,33 +117,37 @@ export class Player extends Character {
 
     //inventory
 
-    if (Phaser.Input.Keyboard.JustDown(this.keymapsManager.getKey("Equipment"))) {
+    if (
+      Phaser.Input.Keyboard.JustDown(this.keymapsManager.getKey("Equipment"))
+    ) {
       this.inventoryIsOpen = !this.inventoryIsOpen;
       this.equipment.toggleInventory(this.inventoryIsOpen);
 
-      console.log("Input player Działą")
+      console.log("Input player Działą");
     }
 
     this.setFlipX(this.isFlipped);
 
     // Animations
     if (isAttacking) {
-      if (isNormalAttack && this.anims.currentAnim?.key !== 'attack') {
-        this.play('attack');
-      } else if (isStrongAttack && this.anims.currentAnim?.key !== 'strong_attack') {
-        this.play('strong_attack');
-      } else if (isBowAttack && this.anims.currentAnim?.key !== 'bow_attack') {
-        this.play('bow_attack');
+      if (isNormalAttack && this.anims.currentAnim?.key !== "attack") {
+        this.play("attack");
+      } else if (
+        isStrongAttack &&
+        this.anims.currentAnim?.key !== "strong_attack"
+      ) {
+        this.play("strong_attack");
+      } else if (isBowAttack && this.anims.currentAnim?.key !== "bow_attack") {
+        this.play("bow_attack");
       }
     } else if (isMoving) {
-      if (this.anims.currentAnim?.key !== 'walking') {
-        this.play('walking');
+      if (this.anims.currentAnim?.key !== "walking") {
+        this.play("walking");
       }
     } else {
-      if (this.anims.currentAnim?.key !== 'idle') {
-        this.play('idle');
+      if (this.anims.currentAnim?.key !== "idle") {
+        this.play("idle");
       }
     }
   }
-
 }
