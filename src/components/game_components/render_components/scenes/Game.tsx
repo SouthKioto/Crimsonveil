@@ -97,6 +97,8 @@ export class Game extends Scene {
         frameHeight: 48,
       },
     );
+
+    EventBus.emit("current-scene-ready", this);
   }
 
   create() {
