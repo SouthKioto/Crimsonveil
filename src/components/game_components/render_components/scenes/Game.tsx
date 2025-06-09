@@ -1,6 +1,6 @@
 import { EventBus } from "../EventBus";
 import { generate_trees } from "../game_elements/generate_trees.tsx";
-import { generate_map } from "../game_elements/generate_map.tsx";
+import { generate_chunks } from "../game_elements/generate_chunks.tsx";
 import { Scene } from "phaser";
 import { Player } from "../Objects/Characters/Player";
 import { Tree } from "../Objects/Environment/Tree.tsx";
@@ -21,6 +21,8 @@ export class Game extends Scene {
   private equipment: Equipment;
   private inventory;
   private frogs: Frog[];
+  private chunkSize: number;
+  private generatedChunks;
 
   constructor() {
     super("Game");
@@ -102,12 +104,16 @@ export class Game extends Scene {
   }
 
   create() {
+    this.chunkSize = 512;
+    this.generatedChunks = new Set();
+
     //anims
     CreateFrogAnims(this.anims);
     CreatePlayerAnims(this.anims);
 
     //generate map
-    const array: number[][] = generate_map(100, 100);
+
+    /*const array: number[][] = generate_map(100, 100);
     const map = this.make.tilemap({
       data: array,
       tileWidth: 32,
@@ -115,7 +121,7 @@ export class Game extends Scene {
     });
     const tiles = map.addTilesetImage(null, "tiles");
     const layer = map.createLayer(0, tiles, 0, 0);
-
+  */
     //add frog enemies
 
     //frog = new Frog(this, 500, 700, 'frog_blueblue', 'frog_hop', 'frog_stay', 'frog_attack')
@@ -125,7 +131,7 @@ export class Game extends Scene {
 
     //adding player
     this.player = new Player(this, 500, 500, "player");
-    console.log(`Player health: ${this.player.health}`);
+    this.cameras.main.startFollow(this.player);
 
     this.player.updateHealth(20);
     console.log(this.player.health);
@@ -140,6 +146,8 @@ export class Game extends Scene {
       this.player.addToInventory(sword1);
     }
 
+    console.log(this.player.showEquipment());
+
     //generate trees
     generate_trees(50, this);
 
@@ -150,5 +158,13 @@ export class Game extends Scene {
 
   update() {
     this.player.update();
+    const playerChunkX = Math.floor(this.player.x / this.chunkSize);
+    const playerChunkY = Math.floor(this.player.y / this.chunkSize);
+
+    const chunkKey = `${playerChunkX}, ${playerChunkY}`;
+    if (!this.generatedChunks.has(chunkKey)) {
+      generate_chunks(this, playerChunkX, playerChunkY, this.chunkSize);
+      this.generatedChunks.add(chunkKey);
+    }
   }
 }

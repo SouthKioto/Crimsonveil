@@ -15,7 +15,7 @@ export class Player extends Character {
   private keymapsManager: KeymapsManager;
   private isFlipped: boolean;
   private inventoryIsOpen: boolean = false;
-  protected equipment: Equipment;
+  protected _equipment: Equipment;
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
     super(scene, x, y, texture);
@@ -29,9 +29,8 @@ export class Player extends Character {
     this._health = 110;
     this._movementSpeed = 200;
 
-    this.equipment = new Equipment(scene, 10, 10, 10, "inventory_slot");
-    this.setEquipment(this.equipment);
-    this.equipment.createEquipment();
+    this._equipment = new Equipment(scene, 10);
+    this.setEquipment(this._equipment);
   }
 
   get health() {
@@ -49,19 +48,18 @@ export class Player extends Character {
   };
 
   setEquipment(equipment: Equipment) {
-    this.equipment = equipment;
+    this._equipment = equipment;
   }
 
   addToInventory(item: Weapon) {
-    if (this.equipment) {
-      this.equipment.addItemToInventory(item);
-    } else {
-      console.warn("EQ nie jest utworzone");
+    if (this._equipment) {
+      this._equipment.addItemToInventory(item);
     }
+    return;
   }
 
   showEquipment() {
-    console.log(this.equipment);
+    return this._equipment.returnInventory();
   }
 
   update() {
