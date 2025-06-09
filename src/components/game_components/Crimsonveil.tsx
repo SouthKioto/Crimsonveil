@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import Phaser, { Scene } from "phaser";
 import { PhaserGame } from "./render_components/PhaserGame";
+import { Equipment_Ui } from "../react-game-ui/elements/Equipment_Ui";
 
 export const Crimsonveil = () => {
   //tutaj dodajemy kod kiedy chcemy polaczyc iu z gra
@@ -8,6 +9,7 @@ export const Crimsonveil = () => {
 
   const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 0 });
   const [playerEquipment, setPlayerEquipment] = useState();
+  const [showEquipment, setShowEquipment] = useState(false);
 
   const phaserRef = useRef();
 
@@ -30,6 +32,13 @@ export const Crimsonveil = () => {
     }
   };
 
+  const showEquipmentUi = () => {
+    const scene = phaserRef.current?.scene;
+    setShowEquipment(!showEquipment);
+
+    console.log(scene.player._equipment);
+  };
+
   return (
     <>
       <PhaserGame ref={phaserRef} />
@@ -38,7 +47,9 @@ export const Crimsonveil = () => {
         Pozycja gracza: x={playerPosition.x}, y={playerPosition.y}
       </p>
 
-      <button onClick={GetPlayerEquipment}>Pobierz eq gracza</button>
+      <button onClick={showEquipmentUi}>Pobierz eq gracza</button>
+
+      {showEquipment ? <Equipment_Ui /> : <></>}
     </>
   );
 };
