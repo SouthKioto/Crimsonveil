@@ -25,6 +25,8 @@ export class Player extends Character {
 
     this.setSize(8, 15);
     this.setScale(2);
+    this.setDepth(2);
+    this.scene.cameras.main.startFollow(this);
 
     this._health = 110;
     this._movementSpeed = 200;
