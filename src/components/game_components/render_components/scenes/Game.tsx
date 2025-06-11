@@ -109,11 +109,6 @@ export class Game extends Scene {
   }
 
   create() {
-    this.chunkSize = 16;
-    this.generatedChunks = new Set();
-    this.tileSize = 16;
-    this.chunks = [];
-
     //anims
     CreateFrogAnims(this.anims);
     CreatePlayerAnims(this.anims);
@@ -125,12 +120,8 @@ export class Game extends Scene {
       repeat: -1,
     });
 
-    //const noice = this.rexPerlin.add(921381293128);
-    //console.log(noice.perlin2(0.1, 0.2));
-
     //adding player
     this.player = new Player(this, 500, 500, "player");
-    this.cameras.main.startFollow(this.player);
 
     this.player.updateHealth(20);
     console.log(this.player.health);
@@ -149,61 +140,8 @@ export class Game extends Scene {
     //this.physics.add.collider(player, treeGroup)
   }
 
-  getChunk(x: number, y: number) {
-    var chunk = null;
-    for (var i = 0; i < this.chunks.length; i++) {
-      if (this.chunks[i].x == x && this.chunks[i].y == y) {
-        chunk = this.chunks[i];
-      }
-    }
-    return chunk;
-  }
-
   update() {
     this.player.update();
-
-    var snappedChunkX =
-      this.chunkSize *
-      this.tileSize *
-      Math.round(this.player.x / (this.chunkSize * this.tileSize));
-    var snappedChunkY =
-      this.chunkSize *
-      this.tileSize *
-      Math.round(this.player.y / (this.chunkSize * this.tileSize));
-
-    snappedChunkX = snappedChunkX / this.chunkSize / this.tileSize;
-    snappedChunkY = snappedChunkY / this.chunkSize / this.tileSize;
-
-    for (var x = snappedChunkX - 2; x < snappedChunkX + 2; x++) {
-      for (var y = snappedChunkY - 2; y < snappedChunkY + 2; y++) {
-        var existingChunk = this.getChunk(x, y);
-
-        if (existingChunk == null) {
-          var newChunk = new Chunk(this, x, y);
-          this.chunks.push(newChunk);
-        }
-      }
-    }
-
-    for (var i = 0; i < this.chunks.length; i++) {
-      var chunk = this.chunks[i];
-
-      if (
-        Phaser.Math.Distance.Between(
-          snappedChunkX,
-          snappedChunkY,
-          chunk.x,
-          chunk.y,
-        ) < 3
-      ) {
-        if (chunk !== null) {
-          chunk.load();
-        }
-      } else {
-        if (chunk !== null) {
-          chunk.unload();
-        }
-      }
-    }
+    generate_chunks(this, 16, 16, this.player);
   }
 }
