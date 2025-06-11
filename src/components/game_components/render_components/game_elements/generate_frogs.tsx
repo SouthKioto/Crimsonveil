@@ -1,9 +1,22 @@
-import { getHeight, getWidth } from "../utils/max_width_and_height"
+import { getHeight, getWidth } from "../utils/max_width_and_height";
 import { Frog } from "../Objects/Enemies/Frog.tsx";
 
+/*
+ * @function generate_frogs
+ *
+ * @param {Phaser.Scene} scene - phaser current scene
+ * @param {number} frogCount - count frog in chunk
+ * @param {number} chunkSize - size of generated chunk
+ * @param {{x: number, y: number}[]} chunk position - position of current chunk
+ *
+ */
 
-export const generate_frogs = (scene: Phaser.Scene, frogsCount: number) => {
-
+export const generate_frogs = (
+  scene: Phaser.Scene,
+  frogsCount: number,
+  chunkSize: number,
+  chunkPosition: { x: number; y: number }[],
+) => {
   const textures: string[] = [
     "_blueblue",
     "_bluebrown",
@@ -11,18 +24,29 @@ export const generate_frogs = (scene: Phaser.Scene, frogsCount: number) => {
     "_greenbrown",
     "_purpleblue",
     "_purplewhite",
-  ]
+  ];
 
   let frog: Frog;
   let frogs: Frog[];
 
-  for (let i = 1; i <= frogsCount; i++) {
-    let randomX = Math.random() * getWidth();
-    let randomY = Math.random() * getHeight();
-    let randomTexture = Math.floor(Math.random() * textures.length);
+  for (const chunk of chunkPosition) {
+    let frogsInChunk = 0;
+    while (frogsInChunk <= frogsCount) {
+      let randomX = chunk.x + Math.random() * chunkSize;
+      let randomY = chunk.y + Math.random() * chunkSize;
+      let randomTexture = Math.floor(Math.random() * textures.length);
 
-    frog = new Frog(scene, randomX, randomY, `frog${textures[randomTexture]}`, `frog${textures[randomTexture]}_hop`, `frog${textures[randomTexture]}_stay`, `frog${textures[randomTexture]}_attack`);
-    //frogs.push(frog);
+      frog = new Frog(
+        scene,
+        randomX,
+        randomY,
+        `frog${textures[randomTexture]}`,
+        `frog${textures[randomTexture]}_hop`,
+        `frog${textures[randomTexture]}_stay`,
+        `frog${textures[randomTexture]}_attack`,
+      );
+      //frogs.push(frog);
+      frogsInChunk++;
+    }
   }
-
-}
+};
