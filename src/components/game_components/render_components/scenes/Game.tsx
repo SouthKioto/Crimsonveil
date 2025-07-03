@@ -17,16 +17,11 @@ import { CreatePlayerAnims } from "../anims/CreatePlayerAnims.tsx";
 
 export class Game extends Scene {
   private player: Player;
-  private tree: Tree;
-  private frog: Frog;
-  private equipment: Equipment;
-  private inventory;
-  private frogs: Frog[];
   protected chunkSize: number;
   protected tileSize;
   protected chunks;
-  private generatedChunks;
   rexPerlin!: RexPerlinPlugin;
+  protected WORDL_SEED;
 
   constructor() {
     super("Game");
@@ -109,6 +104,10 @@ export class Game extends Scene {
   }
 
   create() {
+    this.WORDL_SEED = 921381293128;
+    const noice = this.rexPerlin.add(this.WORDL_SEED);
+    console.log(noice);
+
     //anims
     CreateFrogAnims(this.anims);
     CreatePlayerAnims(this.anims);
@@ -142,6 +141,6 @@ export class Game extends Scene {
 
   update() {
     this.player.update();
-    generate_chunks(this, 16, 16, this.player);
+    generate_chunks(this, 25, 16, this.player, this.WORDL_SEED);
   }
 }

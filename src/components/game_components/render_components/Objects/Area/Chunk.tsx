@@ -1,16 +1,18 @@
 import { Perlin } from "phaser3-rex-plugins/plugins/perlin";
 import { Tile } from "./Tile";
-import { generate_frogs } from "../../game_elements/generate_frogs";
-import { generate_trees } from "../../game_elements/generate_trees";
+import { Enviroment } from "../Enviroment/Enviroment";
 
 export class Chunk {
   private scene: Phaser.Scene;
   private x: number;
   private y: number;
+  protected world_seed;
   protected tileSize: number;
   protected chunkSize: number;
   private tiles;
   private isLoaded: boolean;
+
+  private enviroment: Enviroment;
 
   constructor(
     scene: Phaser.Scene,
@@ -18,14 +20,24 @@ export class Chunk {
     y: number,
     tileSize: number,
     chunkSize: number,
+    world_seed: any,
   ) {
     this.scene = scene;
     this.tileSize = tileSize;
     this.chunkSize = chunkSize;
+    this.world_seed = world_seed;
     this.x = x;
     this.y = y;
 
     this.tiles = this.scene.add.group();
+    this.enviroment = new Enviroment(
+      scene,
+      x,
+      y,
+      chunkSize,
+      tileSize,
+      world_seed,
+    );
     this.isLoaded = false;
   }
 
@@ -40,40 +52,39 @@ export class Chunk {
   unload(): void {
     if (this.isLoaded) {
       this.tiles.clear(true, true);
+      this.enviroment.destroy();
       this.isLoaded = false;
     }
   }
 
-  load() {
+  load(): void {
+    let isGrass = false;
     if (!this.isLoaded) {
-      let grassPositions: { x: number; y: number }[] = [];
-
-      for (var x = 0; x < this.chunkSize; x++) {
-        for (var y = 0; y < this.chunkSize; y++) {
-          var tileX =
+      for (let x = 0; x < this.chunkSize; x++) {
+        for (let y = 0; y < this.chunkSize; y++) {
+          const tileX =
             this.x * (this.chunkSize * this.tileSize) + x * this.tileSize;
 
-          var tileY =
+          const tileY =
             this.y * (this.chunkSize * this.tileSize) + y * this.tileSize;
 
-          const noice = this.scene.rexPerlin.add(921381293128);
-          var perlinValue = noice.perlin2(tileX / 300, tileY / 300);
+          const noise = this.scene.rexPerlin.add(this.world_seed);
+          const perlinValue = noise.perlin2(tileX / 1000, tileY / 1000);
 
-          var key = "";
-          var animationKey = "";
+          let key = "";
+          let animationKey = "";
 
           if (perlinValue < 0.2) {
             key = "sprGrass";
-            grassPositions.push({ x: tileX, y: tileY });
-          } else if (perlinValue >= 0.2 && perlinValue < 0.4) {
+            isGrass = true;
+          } else if (perlinValue >= 0.2 && perlinValue < 0.3) {
             key = "sprSand";
-          } else if (perlinValue >= 0.4) {
+          } else {
             key = "sprWater";
             animationKey = "sprWater";
           }
 
-          var tile = new Tile(this.scene, tileX, tileY, key);
-
+          const tile = new Tile(this.scene, tileX, tileY, key);
           if (animationKey !== "") {
             tile.play(animationKey);
           }
@@ -82,9 +93,7 @@ export class Chunk {
         }
       }
 
-      if (grassPositions.length > 0) {
-        generate_trees(this.scene, 1, grassPositions);
-      }
+      this.enviroment.load();
 
       this.isLoaded = true;
     }

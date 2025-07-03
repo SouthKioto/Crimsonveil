@@ -18,6 +18,7 @@ export const generate_chunks = (
   chunkSize: number,
   tileSize: number,
   player: Player,
+  world_seed: any,
 ) => {
   var snappedChunkX =
     chunkSize * tileSize * Math.round(player.x / (chunkSize * tileSize));
@@ -33,7 +34,7 @@ export const generate_chunks = (
       var existingChunk = getChunk(x, y);
 
       if (existingChunk == null) {
-        var newChunk = new Chunk(scene, x, y, tileSize, chunkSize);
+        var newChunk = new Chunk(scene, x, y, tileSize, chunkSize, world_seed);
         chunks.push(newChunk);
       }
     }
