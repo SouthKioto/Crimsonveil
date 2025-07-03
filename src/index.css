@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Gothic_OT";
+  src: url("public/assets/fonts/Gothic_OT.otf");
+}
+
 body {
   background-color: black;
+  font-family: Gothic_OT;
 }

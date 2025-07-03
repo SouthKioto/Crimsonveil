@@ -1,33 +1,48 @@
 import { NavLink } from "react-router-dom";
-import LoginIcon from "@mui/icons-material/Login";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 
 export const Navbar = () => {
   return (
     <>
       <header>
-        <nav className="bg-gray-800">
-          <div className="nav-left">
-            <div className="logo">
-              <img src="public/assets/ui_assets/crimsonveil_150x150.png" />
+        <div className="">
+          <nav className="flex items-center justify-between px-5 h-30">
+            <div className="nav-left">
+              <div className="logo">
+                <img src="public/assets/ui_assets/crimsonveil_150x150.png" />
+              </div>
             </div>
-          </div>
 
-          <div className="nav-center">
-            <ul className="nav-links">
-              <li>Main Page</li>
-              <li>About Game</li>
-              <li>Support</li>
-            </ul>
-          </div>
+            <div className="nav-center flex flex-1 justify-center items-center">
+              <ul className="nav-links flex space-x-20">
+                <li className="text-3xl text-red-900 font-medium cursor-pointer ">
+                  <NavLink to={"/"}>
+                    <button className="cursor-pointer">Main Page</button>
+                  </NavLink>
+                </li>
+                <li className="text-3xl text-red-900 font-medium">
+                  <NavLink to={"/about-game"}>
+                    <button className="cursor-pointer">About Game</button>
+                  </NavLink>
+                </li>
+                <li className="text-3xl text-red-900 font-medium">
+                  <button className=" cursor-pointer">Support</button>
+                </li>
+              </ul>
+            </div>
 
-          <div className="nav-right">
-            <NavLink to={"/login"}>
-              <button className="bg-blue-500">
-                <LoginIcon />
-              </button>
-            </NavLink>
-          </div>
-        </nav>
+            <div className="nav-right flex items-center">
+              <NavLink to={"/login"}>
+                <button className="cursor-pointer">
+                  <PersonOutlineIcon
+                    fontSize="large"
+                    style={{ color: "#8B0000" }}
+                  />
+                </button>
+              </NavLink>
+            </div>
+          </nav>
+        </div>
       </header>
     </>
   );
