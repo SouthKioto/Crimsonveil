@@ -6,6 +6,9 @@
 }
 
 body {
-  background-color: black;
+  background-image: url("public/assets/ui_assets/dark_forest.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
   font-family: Gothic_OT;
 }
