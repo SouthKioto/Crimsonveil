@@ -1,3 +1,6 @@
+import { NavLink } from "react-router-dom";
+import LoginIcon from "@mui/icons-material/Login";
+
 export const Navbar = () => {
   return (
     <>
@@ -17,7 +20,13 @@ export const Navbar = () => {
             </ul>
           </div>
 
-          <div className="nav-right"></div>
+          <div className="nav-right">
+            <NavLink to={"/login"}>
+              <button className="bg-blue-500">
+                <LoginIcon />
+              </button>
+            </NavLink>
+          </div>
         </nav>
       </header>
     </>
